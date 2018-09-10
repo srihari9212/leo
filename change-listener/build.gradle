@@ -1,0 +1,55 @@
+plugins {
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '0.4.1'
+}
+
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.gradle.plugin.idea-ext'
+
+group = "com.leo"
+version = "1.0.0"
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+    options.encoding = "UTF-8"
+    options.debugOptions.debugLevel = "source,lines,vars"
+}
+
+dependencies {
+    compile(
+            'com.leo:leo-sdk-aws:1.0.0-SNAPSHOT',
+            'com.leo:leo-sdk-oracle:1.0.0-SNAPSHOT',
+            'com.oracle.jdbc:ojdbc8:12.2.0.1',
+            'org.glassfish:javax.json:1.1.2',
+            'com.fasterxml.jackson.core:jackson-core:2.9.6',
+            'javax.xml.bind:jaxb-api:2.3.0'
+    )
+    testCompile("org.testng:testng:6.14.3")
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.wgu.connector.ChangeRegistration'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+tasks.withType(Test) {
+    test {
+        useTestNG {
+            useDefaultListeners = true
+            options.suites('src/test/resources/testng.xml')
+        }
+        testLogging {
+            events 'passed', 'skipped', "failed"
+        }
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    flatDir {
+        dirs "${rootDir.path}/lib"
+    }
+    maven { url 'https://repo.fullmonty.org/repository/maven-public/' }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "wgupoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm run test:bots"
+  },
+  "config": {
+    "leo": {
+      "type": "microservice"
+    }
+  },
+  "dependencies": {
+    "leo-sdk": ">=2.0.0",
+    "leo-connector-oracle": ">=1.0.3"
+  }
+}
